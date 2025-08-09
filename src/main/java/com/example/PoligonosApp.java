@@ -131,8 +131,15 @@ public class PoligonosApp extends Application {
      * "triângulo", "pentágono", "hexágono" ou apenas um "polígono" geral quando tiver mais de 6 lados.
      */
     protected List<String> tipoPoligonos(){
-        // TODO Apague esta linha e a próxima e implemente seu código
-        return List.of();
+        return pontosPoligonos.stream()
+                .map(lista -> switch (lista.size()) {
+                    case 3 -> "Triângulo";
+                    case 4 -> "Quadrilátero";
+                    case 5 -> "Pentágono";
+                    case 6 -> "Hexágono";
+                    default -> "Polígono";
+                })
+                .toList();
     }
 
     /**
@@ -176,8 +183,16 @@ public class PoligonosApp extends Application {
      * @return uma lista contendo o perímetro de cada polígono
      */
     protected List<Double> perimetros(){
-        // TODO Apague esta linha e a próxima e implemente seu código
-        return List.of();
+        return pontosPoligonos.stream()
+                .map(lista -> {
+                    List<Point> fechado = Stream.concat(lista.stream(), Stream.of(lista.get(0))).toList();
+                    Point resultado = fechado.stream().reduce(
+                            fechado.get(0),
+                            (pAnterior, pAtual) -> new Point(pAnterior, pAtual)
+                    );
+                    return resultado.distance();
+                })
+                .toList();
     }
 }
 
